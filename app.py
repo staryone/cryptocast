@@ -6,7 +6,7 @@ import streamlit as st
 import plotly.graph_objects as go
 import pandas as pd
 
-from predictor import predict_next_day, predict_historical, predict_on_date
+from predictor import predict_next_day, predict_historical
 from data_fetcher import fetch_fear_greed
 
 # =============================================
@@ -165,7 +165,7 @@ if page == "🏠 Prediksi":
             hovermode='x unified', height=420,
             legend=dict(orientation='h', yanchor='bottom', y=1.02),
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width='stretch')
 
         # Metrik performa model
         st.markdown("---")
@@ -187,7 +187,7 @@ if page == "🏠 Prediksi":
             df_show['Date']    = df_show['Date'].dt.strftime('%Y-%m-%d')
             df_show['Aktual']  = df_show['Aktual'].apply(lambda x: f"${x:,.2f}")
             df_show['Prediksi']= df_show['Prediksi'].apply(lambda x: f"${x:,.2f}")
-            st.dataframe(df_show, use_container_width=True, hide_index=True)
+            st.dataframe(df_show, width='stretch', hide_index=True)
 
         with st.expander("ℹ️ Tentang Model"):
             st.markdown(f"""
@@ -246,7 +246,7 @@ elif page == "📊 Hasil Eksperimen":
                             'MAE':      '{:,.2f}',
                             'MAPE (%)': '{:.4f}'
                         }),
-            use_container_width=True, hide_index=True
+            width='stretch', hide_index=True
         )
 
         st.markdown("---")
@@ -276,7 +276,7 @@ elif page == "📊 Hasil Eksperimen":
                 max(data[m]['R2'] for m in MODEL_NAMES) + 0.005
             ])
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width='stretch')
 
     with tab_btc: render_experiment_tab('BTC')
     with tab_eth: render_experiment_tab('ETH')
@@ -299,7 +299,7 @@ elif page == "📊 Hasil Eksperimen":
             barmode='group', height=420,
             legend=dict(orientation='h', yanchor='bottom', y=1.02)
         )
-        st.plotly_chart(fig_all, use_container_width=True)
+        st.plotly_chart(fig_all, width='stretch')
 
         # Grafik prediksi 3 koin sekaligus
         st.markdown("---")
@@ -333,4 +333,4 @@ elif page == "📊 Hasil Eksperimen":
             height=420, hovermode='x unified',
             legend=dict(orientation='h', yanchor='bottom', y=1.02)
         )
-        st.plotly_chart(fig3, use_container_width=True)
+        st.plotly_chart(fig3, width='stretch')

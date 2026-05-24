@@ -48,7 +48,10 @@ def fetch_binance_ohlcv(coin: str, start_date: str = None,
                     'endTime':   end_ts,
                     'limit':     1000
                 }
-                resp = requests.get(base_url, params=params, timeout=15)
+                headers = {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                }
+                resp = requests.get(base_url, params=params, timeout=30, headers=headers)
                 data = resp.json()
 
                 if not data or isinstance(data, dict):
@@ -101,7 +104,7 @@ def fetch_fear_greed(limit: int = 200) -> pd.DataFrame:
     """Fetch Crypto Fear & Greed Index dari Alternative.me."""
     url = f"https://api.alternative.me/fng/?limit={limit}&format=json"
     try:
-        response = requests.get(url, timeout=10)
+        response = requests.get(url, timeout=15)
         response.raise_for_status()
         data = response.json()
 
