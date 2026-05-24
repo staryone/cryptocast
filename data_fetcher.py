@@ -37,6 +37,7 @@ def fetch_binance_ohlcv(coin: str, start_date: str = None,
 
     for base_url in BINANCE_ENDPOINTS:
         try:
+            print(f"[Binance] Mencoba {base_url}...")
             all_data   = []
             current_ts = start_ts
 
@@ -52,9 +53,11 @@ def fetch_binance_ohlcv(coin: str, start_date: str = None,
                     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
                 }
                 resp = requests.get(base_url, params=params, timeout=30, headers=headers)
+                print(f"[Binance] Status: {resp.status_code}")
                 data = resp.json()
 
                 if not data or isinstance(data, dict):
+                    print(f"[Binance] Response tidak valid: {data}") 
                     break
 
                 all_data.extend(data)
