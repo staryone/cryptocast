@@ -1,5 +1,6 @@
 import requests
 import pandas as pd
+import yfinance as yf
 
 # =============================================
 # BINANCE API — Fetch OHLCV Data
@@ -11,12 +12,52 @@ BINANCE_SYMBOL = {
     'SOL': 'SOLUSDT'
 }
 
+YAHOO_SYMBOL = {
+    'BTC': 'BTC-USD',
+    'ETH': 'ETH-USD',
+    'SOL': 'SOL-USD'
+}
+
 BINANCE_ENDPOINTS = [
     "https://api1.binance.com/api/v3/klines",
     "https://api2.binance.com/api/v3/klines",
     "https://api3.binance.com/api/v3/klines",
     "https://api.binance.com/api/v3/klines",
 ]
+
+def fetch_yahoo_ohlcv(coin: str, start_date: str = None) -> pd.DataFrame:
+    """Fetch OHLCV dari Yahoo Finance sebagai fallback."""
+    try:
+        symbol = YAHOO_SYMBOL[coin]
+        ticker = yf.Ticker(symbol)
+        
+        if start_date:
+            df = ticker.history(start=start_date, interval='1d')
+        else:
+            df = ticker.history(period='1y', interval='1d')
+        
+        if df.empty:
+            return pd.DataFrame()
+        
+        df = df.reset_index()
+        df['Date'] = pd.to_datetime(df['Date']).dt.tz_localize(None).dt.normalize()
+        df = df.rename(columns={
+            'Open':   'price_open',
+            'High':   'price_high',
+            'Low':    'price_low',
+            'Close':  'price_close',
+            'Volume': 'price_volume'
+        })
+        df = df[['Date', 'price_open', 'price_high', 'price_low',
+                 'price_close', 'price_volume']].copy()
+        df = df.sort_values('Date').reset_index(drop=True)
+        print(f"Berhasil fetch dari Yahoo Finance ({coin})")
+        return df
+        
+    except Exception as e:
+        print(f"Error fetch Yahoo {coin}: {e}")
+        return pd.DataFrame()
+
 
 def fetch_binance_ohlcv(coin: str, start_date: str = None,
                          limit: int = 200) -> pd.DataFrame:
@@ -96,8 +137,7 @@ def fetch_binance_ohlcv(coin: str, start_date: str = None,
             continue
 
     print(f"Semua endpoint gagal untuk {coin}")
-    return pd.DataFrame()
-
+    return fetch_yahoo_ohlcv(coin, start_date=start_date)
 
 # =============================================
 # ALTERNATIVE.ME API — Fear & Greed Index
