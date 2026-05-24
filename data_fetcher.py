@@ -78,7 +78,6 @@ def fetch_binance_ohlcv(coin: str, start_date: str = None,
 
     for base_url in BINANCE_ENDPOINTS:
         try:
-            print(f"[Binance] Mencoba {base_url}...")
             all_data   = []
             current_ts = start_ts
 
