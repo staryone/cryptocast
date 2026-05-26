@@ -77,7 +77,7 @@ def get_updated_data(coin: str, data_dir: str = 'data') -> pd.DataFrame:
 
 def load_scalers(coin: str, scalers_dir: str = 'scalers') -> dict:
     """Load scaler yang sudah disimpan dari training."""
-    path = os.path.join(scalers_dir, f'scalers_{coin}.pkl')
+    path = os.path.join(scalers_dir, f'scaler_{coin}_final.pkl')
     with open(path, 'rb') as f:
         return pickle.load(f)
 
