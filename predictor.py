@@ -17,7 +17,7 @@ from pipeline import (
 # =============================================
 
 def load_model(coin: str, models_dir: str = 'models') -> tf.keras.Model:
-    path = os.path.join(models_dir, f'GRU_Price_{coin}_final.h5')
+    path = os.path.join(models_dir, f'model_{coin}_best.h5')
     model = tf.keras.models.load_model(path, compile=False)
     return model
 
